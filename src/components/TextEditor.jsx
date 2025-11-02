@@ -33,20 +33,25 @@ export default function TextEditor() {
   const start = input.selectionStart;
   const end = input.selectionEnd;
 
-  const words = value.split(/\s+/);
-  const last = words[words.length - 1];
+  const words = value.trim().split(/\s+/);
+  const last = words[words.length - 1] || "";
 
-  
-  if (last.length > 2) {
-    const lastChar = value.slice(-1);
+
+  const lastChar = value[value.length - 1];
+
+  if (/\s|[.,!?]/.test(lastChar) && last.length > 2) {
+    const corrected = getCorrection(last);
+    if (corrected !== last) {
    
-    if (/\s|[.,!?]/.test(lastChar)) {
-      const corrected = getCorrection(last);
-      if (corrected !== last) {
-        value = value.replace(new RegExp(last + "$"), corrected);
-      }
+      value = value.replace(
+        new RegExp(`\\b${last}\\b(?=\\s|[.,!?])`, "g"),
+        corrected
+      );
     }
+  }
 
+ 
+  if (last.length > 1 && !/\s|[.,!?]/.test(lastChar)) {
     const sug = trie.getSuggestions(last, 3);
     setSuggestions(sug);
   } else {
@@ -55,7 +60,7 @@ export default function TextEditor() {
 
   setText(value);
 
-
+  // Keep cursor position stable
   requestAnimationFrame(() => {
     if (textareaRef.current) {
       textareaRef.current.setSelectionRange(start, end);

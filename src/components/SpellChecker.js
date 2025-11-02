@@ -8,7 +8,7 @@ const commonWords = [
   "preferred","principal","privilege","probably","professional","publicly","really","receive","recommend","referred",
   "relevant","religious","remember","resistance","restaurant","rhythm","schedule","separate","sergeant","similar",
   "successful","supersede","surprise","tomorrow","tremendous","truly","unfortunately","until","vacuum","village",
-  "weather","weird","whether","writing","yacht","yourself","across","against","although","among","algorithm","hello","free","love"
+  "weather","weird","whether","writing","yacht","yourself","across","against","although","among","algorithm","hello","love","information"
 ];
 
 export function getCorrection(word) {
@@ -30,7 +30,6 @@ export function getCorrection(word) {
   return bestDist <= 2 ? best : word;
 }
 
-// simple Levenshtein distance
 function levenshtein(a, b) {
   const dp = Array(a.length + 1).fill(null).map(() => Array(b.length + 1).fill(0));
   for (let i = 0; i <= a.length; i++) dp[i][0] = i;
